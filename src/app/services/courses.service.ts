@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map, shareReplay } from "rxjs/operators";
-import { Course } from "../model/course";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map, shareReplay, tap } from "rxjs/operators";
+import { Course, sortCoursesBySeqNo } from "../model/course";
 
 
 @Injectable({
@@ -11,15 +11,40 @@ import { Course } from "../model/course";
 
 export class CourseService{
 
+    private subject = new BehaviorSubject<Course[]>([]);
+
+    courses$ : Observable<Course[]> = this.subject.asObservable();
+
 constructor(private http: HttpClient){
+    this.loadAllCourses();
 }
 
-loadAllCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>('/api/courses')
+loadAllCourses() {
+    const loadCourses$ = this.http.get<Course[]>('/api/courses')
         .pipe(
             map(res => res["payload"]),
-            shareReplay()
+            tap(courses => this.subject.next(courses))
         );
+
+        loadCourses$.subscribe()
+}
+
+saveCourse(courseId : String, changes: Partial<Course>): Observable<any>{
+    return this.http.put(`/api/courses/${courseId}`, changes)
+        .pipe(
+            shareReplay(),
+            tap(() => this.loadAllCourses())
+        );
+}
+
+filterByCategory(category: string): Observable<Course[]> {
+    return this.courses$
+        .pipe(
+            map(courses =>
+                courses.filter(course => course.category == category)
+                    .sort(sortCoursesBySeqNo)
+            )
+        )
 }
 
 }

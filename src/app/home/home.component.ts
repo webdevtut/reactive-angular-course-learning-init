@@ -28,23 +28,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    const courses$ = this.coursesService.loadAllCourses()
-      .pipe(
-        map(courses => courses.sort(sortCoursesBySeqNo))
-      );
+    this.reloadCourses();
 
-      courses$.subscribe(val => console.log(val))
 
-    this.beginnerCourses$ = courses$
-      .pipe(
-        map(courses => courses.filter(courses => courses.category == "BEGINNER"))
-      );
+  }
 
-    this.advancedCourses$ = courses$
-      .pipe(
-        map(courses => courses.filter(courses => courses.category == "ADVANCED"))
-      );
+  reloadCourses(){
 
+        // courses$.subscribe(val => console.log(val))
+
+        this.beginnerCourses$ = this.coursesService.filterByCategory("BEGINNER");
+
+        this.advancedCourses$ = this.coursesService.filterByCategory("ADVANCED");
   }
 
 
