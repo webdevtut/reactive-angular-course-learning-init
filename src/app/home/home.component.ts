@@ -29,23 +29,26 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.reloadCourses();
-
-
   }
 
   reloadCourses(){
 
         // courses$.subscribe(val => console.log(val))
 
+        this.loadingService.loadingOn();
+
         this.beginnerCourses$ = this.coursesService.filterByCategory("BEGINNER");
 
         this.advancedCourses$ = this.coursesService.filterByCategory("ADVANCED");
+
+      
+        this.advancedCourses$.subscribe(
+          val =>{ if(val.length > 0){
+            this.loadingService.loadingOff();
+          }}
+        )
   }
-
-
-
 }
 
 
