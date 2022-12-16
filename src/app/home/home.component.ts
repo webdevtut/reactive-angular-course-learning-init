@@ -36,15 +36,19 @@ export class HomeComponent implements OnInit {
 
         // courses$.subscribe(val => console.log(val))
 
-        this.loadingService.loadingOn();
 
         this.beginnerCourses$ = this.coursesService.filterByCategory("BEGINNER");
 
         this.advancedCourses$ = this.coursesService.filterByCategory("ADVANCED");
 
+        // const test = this.coursesService.filterByCategory("ADVANCED");
+
+        // this.loadingService.showLoaderUntilCompleted
       
         this.advancedCourses$.subscribe(
-          val =>{ if(val.length > 0){
+          val =>{
+            this.loadingService.loadingOn();
+             if(val.length > 0){
             this.loadingService.loadingOff();
           }}
         )
