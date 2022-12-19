@@ -3,9 +3,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 
 
-@Injectable({
-    providedIn: "root"
-})
+@Injectable() //Removed to create different instances
 export class MessagesService{
 
 
