@@ -8,6 +8,7 @@ import {CourseDialogComponent} from '../course-dialog/course-dialog.component';
 import { CourseService } from '../services/courses.service';
 import { LoadingService } from '../loading.service';
 import { MessagesService } from '../messages/messages.service';
+import { CoursesStore } from '../services/courses.store';
 
 
 @Component({
@@ -22,10 +23,8 @@ export class HomeComponent implements OnInit {
   advancedCourses$: Observable<Course[]>;
 
 
-  constructor(private http: HttpClient,
-    private coursesService : CourseService,
-    private loadingService : LoadingService,
-    private messagesService : MessagesService
+  constructor(
+    private coursesStore: CoursesStore,
     ) {
 
   }
@@ -36,39 +35,10 @@ export class HomeComponent implements OnInit {
 
   reloadCourses(){
 
-        // courses$.subscribe(val => console.log(val))
+        this.beginnerCourses$ = this.coursesStore.filterByCategory("BEGINNER")
 
-        this.loadingService.loadingOn();
+        this.advancedCourses$ = this.coursesStore.filterByCategory("ADVANCED");
 
-        const courses$ = this.http.get<Course[]>('/api/courses')
-        .pipe(
-            catchError(err => {
-                const message = "Testing";
-                this.messagesService.showErrors(err.error.message);
-                console.log(message, err);
-                return throwError(err)
-            }),
-            finalize(()=> this.loadingService.loadingOff())
-        );
-
-        courses$.subscribe()
-
-
-        this.beginnerCourses$ = this.coursesService.filterByCategory("BEGINNER");
-
-        this.advancedCourses$ = this.coursesService.filterByCategory("ADVANCED");
-
-        // const test = this.coursesService.filterByCategory("ADVANCED");
-
-        // this.loadingService.showLoaderUntilCompleted(courses$)
-      
-        // this.advancedCourses$.subscribe(
-        //   val =>{
-        //     this.loadingService.loadingOn();
-        //      if(val.length > 0){
-        //     this.loadingService.loadingOff();
-        //   }}
-        // )
   }
 }
 
