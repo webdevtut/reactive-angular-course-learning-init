@@ -20,6 +20,13 @@ constructor(private http: HttpClient){
     this.loadAllCourses();
 }
 
+loadCourseById(courseId: number){
+        return this.http.get<Course>(`/api/courses/${courseId}`)
+            .pipe(
+                shareReplay()
+            );
+}
+
 loadAllCourses() {
     const loadCourses$ = this.http.get<Course[]>('/api/courses')
         .pipe(
