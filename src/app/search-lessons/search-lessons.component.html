@@ -8,33 +8,31 @@
 
   </mat-form-field>
 
-  <button class="search" mat-raised-button color="primary">
+  <button class="search" mat-raised-button color="primary" (click)="onSearch(searchInput.value)">
     <mat-icon>search</mat-icon>
     Search
   </button>
 
+  <ng-container *ngIf="(searchResults$ | async) as lessons">
     <table class="lessons-table mat-elevation-z7">
 
       <thead>
-      <th>#</th>
-      <th>Description</th>
-      <th>Duration</th>
+        <th>#</th>
+        <th>Description</th>
+        <th>Duration</th>
       </thead>
 
-      <!-- tr class="lesson-row">
+      <tr class="lesson-row" *ngFor="let lesson of lessons">
         <td class="seqno-cell">{{lesson.seqNo}}</td>
         <td class="description-cell">{{lesson.description}}</td>
         <td class="duration-cell">{{lesson.duration}}</td>
-      </tr -->
+      </tr>
 
     </table>
+  </ng-container>
+
+
 
 
 
 </div>
-
-
-
-
-
-
