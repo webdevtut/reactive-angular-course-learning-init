@@ -44,8 +44,14 @@ data$: Observable<CourseData>;
     const courseId = parseInt(this.route.snapshot.paramMap.get("courseId"));
 
     const course$ = this.coursesService.loadCourseById(courseId)
+      .pipe(
+        startWith(null)
+      );
 
     const lessons$ = this.coursesService.loadAllCourseLessons(courseId)
+    .pipe(
+      startWith([])
+    );
 
     this.data$ = combineLatest([course$, lessons$])
       .pipe(
